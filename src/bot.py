@@ -18,7 +18,7 @@ async def on_member_remove(member):
 
 @bot.command()
 async def test(ctx):
-    await ctx.send("Rato-esquilo!")
+    await ctx.send("Rato-esquilo! Ping: " + str(round(bot.latency * 1000)) + "ms")
 
 token = open("token.txt", 'r').readline()
 bot.run(token)
