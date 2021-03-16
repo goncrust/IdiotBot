@@ -7,6 +7,15 @@ intents = discord.Intents(messages=True, guilds=True,
 bot = commands.Bot(command_prefix='>', intents=intents)
 
 
+@bot.event
+async def on_ready():
+    for cog in os.listdir("./src/cogs"):
+        if cog.endswith(".py"):
+            bot.load_extension("cogs." + cog[:-3])
+
+    await bot.change_presence(activity=discord.Game("Rato-Esquilo"))
+
+
 @bot.command()
 async def load(ctx, extension):
     bot.load_extension("cogs." + extension)
@@ -25,10 +34,6 @@ async def reload(ctx, extension):
 # @bot.event
 # async def on_member_join(member):
 #         print(str(member) + " joined")
-
-for cog in os.listdir("./src/cogs"):
-    if cog.endswith(".py"):
-        bot.load_extension("cogs." + cog[:-3])
 
 token = open("token.txt", 'r').readline()
 bot.run(token)
