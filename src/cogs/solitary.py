@@ -16,7 +16,7 @@ class Solitary(commands.Cog):
         servers[str(guild.id)] = "0"
 
         with open("./src/cogs/servers.json", 'w') as s:
-            json.dump(servers, s)
+            json.dump(servers, s, indent=4)
 
         with open("./src/cogs/users.json", 'r') as u:
             users = json.load(u)
@@ -24,7 +24,7 @@ class Solitary(commands.Cog):
         users[str(guild.id)] = {}
 
         with open("./src/cogs/users.json", 'w') as u:
-            json.dump(users, u)
+            json.dump(users, u, indent=4)
 
     @commands.command()
     async def list_voice(self, ctx):
@@ -47,7 +47,7 @@ class Solitary(commands.Cog):
         servers[str(ctx.guild.id)] = voices[number-1].id
 
         with open("./src/cogs/servers.json", 'w') as s:
-            json.dump(servers, s)
+            json.dump(servers, s, indent=4)
 
         await ctx.send("Solitary channel changed to: ```" + voices[number-1].name + "```")
 
@@ -81,7 +81,7 @@ class Solitary(commands.Cog):
                     users[str(ctx.guild.id)][str(member.id)] = False
 
                     with open("./src/cogs/users.json", 'w') as u:
-                        json.dump(users, u)
+                        json.dump(users, u, indent=4)
 
                     await ctx.send(member.display_name + " can now leave solitary!")
 
@@ -90,7 +90,7 @@ class Solitary(commands.Cog):
         users[str(ctx.guild.id)][str(member.id)] = True
 
         with open("./src/cogs/users.json", 'w') as u:
-            json.dump(users, u)
+            json.dump(users, u, indent=4)
 
         voices = ctx.guild.voice_channels
 
