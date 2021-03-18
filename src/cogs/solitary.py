@@ -18,6 +18,14 @@ class Solitary(commands.Cog):
         with open("./src/cogs/servers.json", 'w') as s:
             json.dump(servers, s)
 
+        with open("./src/cogs/users.json", 'r') as u:
+            users = json.load(u)
+
+        users[str(guild.id)] = {}
+
+        with open("./src/cogs/users.json", 'w') as u:
+            json.dump(users, u)
+
     @commands.command()
     async def list_voice(self, ctx):
         voices = ctx.guild.voice_channels
@@ -60,6 +68,30 @@ class Solitary(commands.Cog):
         with open("./src/cogs/servers.json", 'r') as s:
             servers = json.load(s)
 
+        with open("./src/cogs/users.json", 'r') as u:
+            users = json.load(u)
+
+        if servers[str(ctx.guild.id)] == "0":
+            await ctx.send("No solitary channel selected. Please run: >ssolitary")
+            return
+
+        if str(member.id) in users[str(member.guild.id)]:
+            if users[str(ctx.guild.id)][str(member.id)]:
+                if ctx.message.author != member:
+                    users[str(ctx.guild.id)][str(member.id)] = False
+
+                    with open("./src/cogs/users.json", 'w') as u:
+                        json.dump(users, u)
+
+                    await ctx.send(member.display_name + " can now leave solitary!")
+
+                return
+
+        users[str(ctx.guild.id)][str(member.id)] = True
+
+        with open("./src/cogs/users.json", 'w') as u:
+            json.dump(users, u)
+
         voices = ctx.guild.voice_channels
 
         for voice in voices:
@@ -67,6 +99,26 @@ class Solitary(commands.Cog):
                 channel = voice
 
         await member.move_to(channel)
+
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        with open("./src/cogs/servers.json", 'r') as s:
+            servers = json.load(s)
+
+        with open("./src/cogs/users.json", 'r') as u:
+            users = json.load(u)
+
+        if str(member.id) in users[str(member.guild.id)]:
+            if after.channel.id != servers[str(member.guild.id)]:
+                if users[str(member.guild.id)][str(member.id)]:
+
+                    voices = member.guild.voice_channels
+
+                    for voice in voices:
+                        if voice.id == servers[str(member.guild.id)]:
+                            channel = voice
+
+                    await member.move_to(channel)
 
 
 def setup(bot):

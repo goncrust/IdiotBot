@@ -3,7 +3,7 @@ from discord.ext import commands
 import os
 
 intents = discord.Intents(messages=True, guilds=True,
-                          reactions=True, members=True, presences=True)
+                          reactions=True, members=True, presences=True, voice_states=True)
 bot = commands.Bot(command_prefix='>', intents=intents)
 
 
